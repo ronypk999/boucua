@@ -35,6 +35,60 @@ import { Audio } from "expo-av";
 import Song from "@/components/Song";
 import { BouContext } from "@/provider/BouContext";
 import { opacity } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
+const alphabet = [
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+  "L",
+  "M",
+  "N",
+  "O",
+  "P",
+  "Q",
+  "R",
+  "S",
+  "T",
+  "U",
+  "V",
+  "W",
+  "X",
+  "Y",
+  "Z",
+];
 
 const bouImages = [bau, kakra, murgi, mas, horin, chingri];
 const bouImagesFlat = [
@@ -53,6 +107,7 @@ export default function Play2() {
     marginLeft: -13,
   });
   const [liftedBowl, setLiftedBowl] = useState(true);
+  const [versionGen, setVersionGen] = useState("23.354.56");
 
   const nav = useNavigation();
 
@@ -172,6 +227,21 @@ export default function Play2() {
 
     setLiftedBowl(!liftedBowl);
   };
+
+  const random9 = (n: number) => {
+    return Math.floor(Math.random() * n);
+  };
+
+  useEffect(() => {
+    setVersionGen(
+      `${random9(9)}${random9(9)}.${random9(9)}${random9(9)}.${random9(
+        9
+      )}${random9(9)}.${random9(9)}${random9(9)}${
+        alphabet[random9(alphabet.length - 1)]
+      }`
+    );
+  }, []);
+
   return (
     <View style={styles.container}>
       <ImageBackground source={back as any} style={styles.backgroundImage}>
@@ -225,7 +295,7 @@ export default function Play2() {
           <Image source={liftedBowl ? btnMo : (btnXoc as any)}></Image>
         </TouchableOpacity>
         <View style={{ flex: 0 }}>
-          <Text style={styles.textVersion}>Vs: 23.34.56</Text>
+          <Text style={styles.textVersion}>Vs: {versionGen}</Text>
         </View>
       </ImageBackground>
     </View>

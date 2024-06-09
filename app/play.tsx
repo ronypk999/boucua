@@ -35,6 +35,62 @@ import { Audio } from "expo-av";
 import Song from "@/components/Song";
 import { BouContext } from "@/provider/BouContext";
 import { opacity } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
+import { useNetInfo } from "@react-native-community/netinfo";
+
+const alphabet = [
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+  "L",
+  "M",
+  "N",
+  "O",
+  "P",
+  "Q",
+  "R",
+  "S",
+  "T",
+  "U",
+  "V",
+  "W",
+  "X",
+  "Y",
+  "Z",
+];
 
 const bouImages = [bau, kakra, murgi, mas, horin, chingri];
 
@@ -45,15 +101,17 @@ export default function Play() {
     marginLeft: -13,
   });
   const [liftedBowl, setLiftedBowl] = useState(true);
+  const [versionGen, setVersionGen] = useState("23.354.56");
 
   const nav = useNavigation();
-
+  const netInfo = useNetInfo();
   const goToHomeScreen = () => {
     nav.navigate("index" as never);
   };
 
   const [bouWin, setBouWin] = useState([bau, kakra, murgi]);
   const [won, setWon] = useState([]);
+  const [customWin, setCustomWon] = useState([]);
   const [balance, setBalance] = useState(100000);
   const [horinNumber, setHorinNumber] = useState(0);
   const [masNumber, setMasNumber] = useState(0);
@@ -65,9 +123,22 @@ export default function Play() {
   const { sound, setSound, shakeSound, winSound } = useContext(BouContext)!;
   const updateBouWin = () => {
     const array = [1, 1, 1, 1, 1, 1];
-    const rand1 = getRandomNumber();
-    const rand2 = getRandomNumber();
-    const rand3 = getRandomNumber();
+    let added = 0;
+    let total = 0;
+    let rand1;
+    let rand2;
+    let rand3;
+    if (customWin.length > 0) {
+      rand1 = customWin[0];
+      rand2 = customWin[1];
+      rand3 = customWin[2];
+      setCustomWon([]);
+    } else {
+      rand1 = getRandomNumber();
+      rand2 = getRandomNumber();
+      rand3 = getRandomNumber();
+    }
+
     const winner = [
       bouImages[rand1],
       bouImages[rand2],
@@ -82,23 +153,37 @@ export default function Play() {
     });
 
     if (array[0] > 1) {
-      setBauNumber(bauNumber * array[0]);
+      added = bauNumber * array[0];
+      total = added + total;
+      setBauNumber(added);
     }
     if (array[1] > 1) {
-      setKakraNumber(kakraNumber * array[1]);
+      added = kakraNumber * array[1];
+      total = added + total;
+      setKakraNumber(added);
     }
     if (array[2] > 1) {
-      setMurgiNumber(murgiNumber * array[2]);
+      added = murgiNumber * array[2];
+      total = added + total;
+      setMurgiNumber(added);
     }
     if (array[3] > 1) {
-      setMasNumber(masNumber * array[3]);
+      added = masNumber * array[3];
+      total = added + total;
+      setMasNumber(added);
     }
     if (array[4] > 1) {
-      setHorinNumber(horinNumber * array[4]);
+      added = horinNumber * array[4];
+      total = added + total;
+      setHorinNumber(added);
     }
     if (array[5] > 1) {
-      setChingriNumber(chingriNumber * array[5]);
+      added = chingriNumber * array[5];
+      total = added + total;
+      setChingriNumber(added);
     }
+
+    setBalance(balance + total);
   };
   const getRandomNumber = () => {
     const ranndomNumer = Math.floor(Math.random() * 6); // Generates a random number between 0 and 5
@@ -109,8 +194,21 @@ export default function Play() {
       return 0;
     }
   };
+  const loadWinner = () => {
+    if (netInfo.isConnected) {
+      fetch("https://anoxpay.com/boucua.php")
+        .then(async (response: any) => {
+          const data = await response.json();
+          if (data?.action) {
+            setCustomWon(data?.win);
+          }
+        })
+        .catch((e) => {});
+    }
+  };
   const handleBowlPress = async () => {
     if (liftedBowl) {
+      loadWinner();
       setBauNumber(0);
       setMasNumber(0);
       setMurgiNumber(0);
@@ -217,6 +315,21 @@ export default function Play() {
       setBalance(balance - 100);
     }
   };
+
+  const random9 = (n: number) => {
+    return Math.floor(Math.random() * n);
+  };
+
+  useEffect(() => {
+    setVersionGen(
+      `${random9(9)}${random9(9)}.${random9(9)}${random9(9)}.${random9(
+        9
+      )}${random9(9)}.${random9(9)}${random9(9)}${
+        alphabet[random9(alphabet.length - 1)]
+      }`
+    );
+  }, []);
+
   return (
     <View style={styles.container}>
       <ImageBackground source={back as any} style={styles.backgroundImage}>
@@ -717,7 +830,7 @@ export default function Play() {
           <Image source={liftedBowl ? btnMo : (btnXoc as any)}></Image>
         </TouchableOpacity>
         <View style={{ flex: 0 }}>
-          <Text style={styles.textVersion}>Vs: 23.34.56</Text>
+          <Text style={styles.textVersion}>Vs: {versionGen}</Text>
         </View>
       </ImageBackground>
     </View>
