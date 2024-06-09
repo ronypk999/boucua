@@ -52,7 +52,7 @@ export class TextStroke extends React.Component<Props> {
     const left = this.createClones(-strokeW * 1.2, 0, color);
 
     return (
-      <View>
+      <View style={{ margin: "auto" }}>
         <View style={styles.outline}>{left}</View>
         <View style={styles.outline}>{right}</View>
         <View style={styles.outline}>{bottom}</View>

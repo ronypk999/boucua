@@ -19,6 +19,13 @@ export default function RootLayout() {
             headerShown: false,
           }}
         />
+
+        <Stack.Screen
+          name="play2"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack>
     </BouProvider>
   );

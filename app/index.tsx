@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import back_1 from "../assets/images/back_1.png";
-import back_2 from "../assets/images/back_2.png";
+import back_2 from "../assets/images/icon.png";
 import play from "../assets/images/play.png";
 import battle from "../assets/images/battle.png";
 import back_3 from "../assets/images/back_3.png";
@@ -18,6 +18,9 @@ export default function Index() {
   const goToPlayScreen = () => {
     nav.navigate("play" as never);
   };
+  const goToPlay2Screen = () => {
+    nav.navigate("play2" as never);
+  };
   return (
     <View style={styles.container}>
       <ImageBackground source={back_1 as any} style={styles.backgroundImage}>
@@ -26,8 +29,9 @@ export default function Index() {
           <TouchableOpacity onPress={goToPlayScreen} style={styles.container}>
             <Image source={play as any} style={styles.image} />
           </TouchableOpacity>
-
-          <Image source={battle as any} style={styles.image} />
+          <TouchableOpacity onPress={goToPlay2Screen} style={styles.container}>
+            <Image source={battle as any} style={styles.image} />
+          </TouchableOpacity>
         </View>
         <Image source={back_3 as any} style={styles.image2} />
       </ImageBackground>

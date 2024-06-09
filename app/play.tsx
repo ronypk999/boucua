@@ -54,16 +54,51 @@ export default function Play() {
 
   const [bouWin, setBouWin] = useState([bau, kakra, murgi]);
   const [won, setWon] = useState([]);
+  const [balance, setBalance] = useState(100000);
+  const [horinNumber, setHorinNumber] = useState(0);
+  const [masNumber, setMasNumber] = useState(0);
+  const [bauNumber, setBauNumber] = useState(0);
+  const [kakraNumber, setKakraNumber] = useState(0);
+  const [chingriNumber, setChingriNumber] = useState(0);
+  const [murgiNumber, setMurgiNumber] = useState(0);
 
   const { sound, setSound, shakeSound, winSound } = useContext(BouContext)!;
   const updateBouWin = () => {
+    const array = [1, 1, 1, 1, 1, 1];
+    const rand1 = getRandomNumber();
+    const rand2 = getRandomNumber();
+    const rand3 = getRandomNumber();
     const winner = [
-      bouImages[getRandomNumber()],
-      bouImages[getRandomNumber()],
-      bouImages[getRandomNumber()],
+      bouImages[rand1],
+      bouImages[rand2],
+      bouImages[rand3],
     ] as never;
+
     setBouWin(winner);
     setWon(winner);
+
+    [rand1, rand2, rand3].forEach((win) => {
+      const r = (array[win] = array[win] + 1);
+    });
+
+    if (array[0] > 1) {
+      setBauNumber(bauNumber * array[0]);
+    }
+    if (array[1] > 1) {
+      setKakraNumber(kakraNumber * array[1]);
+    }
+    if (array[2] > 1) {
+      setMurgiNumber(murgiNumber * array[2]);
+    }
+    if (array[3] > 1) {
+      setMasNumber(masNumber * array[3]);
+    }
+    if (array[4] > 1) {
+      setHorinNumber(horinNumber * array[4]);
+    }
+    if (array[5] > 1) {
+      setChingriNumber(chingriNumber * array[5]);
+    }
   };
   const getRandomNumber = () => {
     const ranndomNumer = Math.floor(Math.random() * 6); // Generates a random number between 0 and 5
@@ -76,6 +111,12 @@ export default function Play() {
   };
   const handleBowlPress = async () => {
     if (liftedBowl) {
+      setBauNumber(0);
+      setMasNumber(0);
+      setMurgiNumber(0);
+      setKakraNumber(0);
+      setChingriNumber(0);
+      setHorinNumber(0);
       await shakeSound?.stopAsync();
       await shakeSound?.playAsync();
       setLiftBowl({
@@ -152,6 +193,30 @@ export default function Play() {
 
     setLiftedBowl(!liftedBowl);
   };
+
+  const handlePress = (type: any) => {
+    if (!liftedBowl) {
+      if (type === "horin") {
+        setHorinNumber(horinNumber + 100);
+      }
+      if (type === "kakra") {
+        setKakraNumber(kakraNumber + 100);
+      }
+      if (type === "bau") {
+        setBauNumber(bauNumber + 100);
+      }
+      if (type === "mas") {
+        setMasNumber(masNumber + 100);
+      }
+      if (type === "murgi") {
+        setMurgiNumber(murgiNumber + 100);
+      }
+      if (type === "chingri") {
+        setChingriNumber(chingriNumber + 100);
+      }
+      setBalance(balance - 100);
+    }
+  };
   return (
     <View style={styles.container}>
       <ImageBackground source={back as any} style={styles.backgroundImage}>
@@ -183,7 +248,9 @@ export default function Play() {
                 }}
               >
                 <TextStroke stroke={1.7} color={"#000000"}>
-                  <Text style={styles.textBalance}>100,000</Text>
+                  <Text style={styles.textBalance}>
+                    {balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  </Text>
                 </TextStroke>
               </View>
             </ImageBackground>
@@ -203,107 +270,449 @@ export default function Play() {
         </View>
 
         <View style={styles.container4}>
+          {/* Horin */}
           <View style={{ position: "relative" }}>
-            <Image
-              source={horin_flat as any}
-              style={
-                won.length === 0 || won.includes(horin as never)
-                  ? styles.image3
-                  : [styles.image3, { opacity: 0.8 }]
-              }
-            ></Image>
-            {won.includes(horin as never) && (
-              <Image
-                source={border as any}
-                style={[styles.image3, { position: "absolute" }]}
-              ></Image>
-            )}
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                handlePress("horin");
+              }}
+            >
+              <Image source={horin_flat as any} style={styles.image3}></Image>
+              {won.includes(horin as never) && (
+                <Image
+                  source={border as any}
+                  style={[styles.image3, { position: "absolute" }]}
+                ></Image>
+              )}
+              {won.length !== 0 && !won.includes(horin as never) && (
+                <View style={styles.layer}></View>
+              )}
+              {won.length !== 0 &&
+                horinNumber > 0 &&
+                liftedBowl &&
+                !won.includes(horin as never) && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      bottom: 20,
+                      left: "50%",
+                      transform: [{ translateX: -60 / 2 }],
+                    }}
+                  >
+                    <TextStroke stroke={1.7} color={"#000000"}>
+                      <Text style={styles.textBauNumberRed}>THUA</Text>
+                    </TextStroke>
+                  </View>
+                )}
+
+              {won.length !== 0 &&
+                horinNumber > 0 &&
+                liftedBowl &&
+                won.includes(horin as never) && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      bottom: 20,
+                      left: "50%",
+                      transform: [{ translateX: -80 / 2 }],
+                    }}
+                  >
+                    <TextStroke stroke={1.7} color={"#000000"}>
+                      <Text style={styles.textBauNumberGreen}>THÁNG</Text>
+                    </TextStroke>
+                  </View>
+                )}
+
+              {horinNumber > 0 && (
+                <View style={styles.textBauNumberBox}>
+                  <TextStroke stroke={1.7} color={"#000000"}>
+                    <Text
+                      style={
+                        won.includes(horin as never)
+                          ? !liftedBowl
+                            ? styles.textBauNumberYellow
+                            : styles.textBauNumberGreen
+                          : styles.textBauNumberYellow
+                      }
+                    >
+                      {horinNumber}
+                    </Text>
+                  </TextStroke>
+                </View>
+              )}
+            </TouchableOpacity>
           </View>
 
+          {/* Bau*/}
+
           <View style={{ position: "relative" }}>
-            <Image
-              source={bau_flat as any}
-              style={
-                won.length === 0 || won.includes(bau as never)
-                  ? styles.image3
-                  : [styles.image3, { opacity: 0.8 }]
-              }
-            ></Image>
-            {won.includes(bau as never) && (
-              <Image
-                source={border as any}
-                style={[styles.image3, { position: "absolute" }]}
-              ></Image>
-            )}
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                handlePress("bau");
+              }}
+            >
+              <Image source={bau_flat as any} style={styles.image3}></Image>
+              {won.includes(bau as never) && (
+                <Image
+                  source={border as any}
+                  style={[styles.image3, { position: "absolute" }]}
+                ></Image>
+              )}
+              {won.length !== 0 && !won.includes(bau as never) && (
+                <View style={styles.layer}></View>
+              )}
+              {won.length !== 0 &&
+                bauNumber > 0 &&
+                liftedBowl &&
+                !won.includes(bau as never) && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      bottom: 20,
+                      left: "50%",
+                      transform: [{ translateX: -60 / 2 }],
+                    }}
+                  >
+                    <TextStroke stroke={1.7} color={"#000000"}>
+                      <Text style={styles.textBauNumberRed}>THUA</Text>
+                    </TextStroke>
+                  </View>
+                )}
+              {won.length !== 0 &&
+                bauNumber > 0 &&
+                liftedBowl &&
+                won.includes(bau as never) && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      bottom: 20,
+                      left: "50%",
+                      transform: [{ translateX: -80 / 2 }],
+                    }}
+                  >
+                    <TextStroke stroke={1.7} color={"#000000"}>
+                      <Text style={styles.textBauNumberGreen}>THÁNG</Text>
+                    </TextStroke>
+                  </View>
+                )}
+              {bauNumber > 0 && (
+                <View style={styles.textBauNumberBox}>
+                  <TextStroke stroke={1.7} color={"#000000"}>
+                    <Text
+                      style={
+                        won.includes(bau as never)
+                          ? !liftedBowl
+                            ? styles.textBauNumberYellow
+                            : styles.textBauNumberGreen
+                          : styles.textBauNumberYellow
+                      }
+                    >
+                      {bauNumber}
+                    </Text>
+                  </TextStroke>
+                </View>
+              )}
+            </TouchableOpacity>
           </View>
+          {/* Murgi */}
           <View style={{ position: "relative" }}>
-            <Image
-              source={murgi_flat as any}
-              style={
-                won.length === 0 || won.includes(murgi as never)
-                  ? styles.image3
-                  : [styles.image3, { opacity: 0.8 }]
-              }
-            ></Image>
-            {won.includes(murgi as never) && (
-              <Image
-                source={border as any}
-                style={[styles.image3, { position: "absolute" }]}
-              ></Image>
-            )}
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                handlePress("murgi");
+              }}
+            >
+              <Image source={murgi_flat as any} style={styles.image3}></Image>
+              {won.includes(murgi as never) && (
+                <Image
+                  source={border as any}
+                  style={[styles.image3, { position: "absolute" }]}
+                ></Image>
+              )}
+              {won.length !== 0 && !won.includes(murgi as never) && (
+                <View style={styles.layer}></View>
+              )}
+              {won.length !== 0 &&
+                murgiNumber > 0 &&
+                liftedBowl &&
+                !won.includes(murgi as never) && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      bottom: 20,
+                      left: "50%",
+                      transform: [{ translateX: -60 / 2 }],
+                    }}
+                  >
+                    <TextStroke stroke={1.7} color={"#000000"}>
+                      <Text style={styles.textBauNumberRed}>THUA</Text>
+                    </TextStroke>
+                  </View>
+                )}
+              {won.length !== 0 &&
+                murgiNumber > 0 &&
+                liftedBowl &&
+                won.includes(murgi as never) && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      bottom: 20,
+                      left: "50%",
+                      transform: [{ translateX: -80 / 2 }],
+                    }}
+                  >
+                    <TextStroke stroke={1.7} color={"#000000"}>
+                      <Text style={styles.textBauNumberGreen}>THÁNG</Text>
+                    </TextStroke>
+                  </View>
+                )}
+              {murgiNumber > 0 && (
+                <View style={styles.textBauNumberBox}>
+                  <TextStroke stroke={1.7} color={"#000000"}>
+                    <Text
+                      style={
+                        won.includes(murgi as never)
+                          ? !liftedBowl
+                            ? styles.textBauNumberYellow
+                            : styles.textBauNumberGreen
+                          : styles.textBauNumberYellow
+                      }
+                    >
+                      {murgiNumber}
+                    </Text>
+                  </TextStroke>
+                </View>
+              )}
+            </TouchableOpacity>
           </View>
+
+          {/* Mas */}
+
           <View style={{ position: "relative" }}>
-            <Image
-              source={mas_flat as any}
-              style={
-                won.length === 0 || won.includes(mas as never)
-                  ? styles.image3
-                  : [styles.image3, { opacity: 0.8 }]
-              }
-            ></Image>
-            {won.includes(mas as never) && (
-              <Image
-                source={border as any}
-                style={[styles.image3, { position: "absolute" }]}
-              ></Image>
-            )}
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                handlePress("mas");
+              }}
+            >
+              <Image source={mas_flat as any} style={styles.image3}></Image>
+              {won.includes(mas as never) && (
+                <Image
+                  source={border as any}
+                  style={[styles.image3, { position: "absolute" }]}
+                ></Image>
+              )}
+              {won.length !== 0 && !won.includes(mas as never) && (
+                <View style={styles.layer}></View>
+              )}
+              {won.length !== 0 &&
+                masNumber > 0 &&
+                liftedBowl &&
+                !won.includes(mas as never) && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      bottom: 20,
+                      left: "50%",
+                      transform: [{ translateX: -60 / 2 }],
+                    }}
+                  >
+                    <TextStroke stroke={1.7} color={"#000000"}>
+                      <Text style={styles.textBauNumberRed}>THUA</Text>
+                    </TextStroke>
+                  </View>
+                )}
+              {won.length !== 0 &&
+                masNumber > 0 &&
+                liftedBowl &&
+                won.includes(mas as never) && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      bottom: 20,
+                      left: "50%",
+                      transform: [{ translateX: -80 / 2 }],
+                    }}
+                  >
+                    <TextStroke stroke={1.7} color={"#000000"}>
+                      <Text style={styles.textBauNumberGreen}>THÁNG</Text>
+                    </TextStroke>
+                  </View>
+                )}
+              {masNumber > 0 && (
+                <View style={styles.textBauNumberBox}>
+                  <TextStroke stroke={1.7} color={"#000000"}>
+                    <Text
+                      style={
+                        won.includes(mas as never)
+                          ? !liftedBowl
+                            ? styles.textBauNumberYellow
+                            : styles.textBauNumberGreen
+                          : styles.textBauNumberYellow
+                      }
+                    >
+                      {masNumber}
+                    </Text>
+                  </TextStroke>
+                </View>
+              )}
+            </TouchableOpacity>
           </View>
+
+          {/* Kakra */}
+
           <View style={{ position: "relative" }}>
-            <Image
-              source={kakra_flat as any}
-              style={
-                won.length === 0 || won.includes(kakra as never)
-                  ? styles.image3
-                  : [styles.image3, { opacity: 0.8 }]
-              }
-            ></Image>
-            {won.includes(kakra as never) && (
-              <Image
-                source={border as any}
-                style={[styles.image3, { position: "absolute" }]}
-              ></Image>
-            )}
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                handlePress("kakra");
+              }}
+            >
+              <Image source={kakra_flat as any} style={styles.image3}></Image>
+              {won.includes(kakra as never) && (
+                <Image
+                  source={border as any}
+                  style={[styles.image3, { position: "absolute" }]}
+                ></Image>
+              )}
+              {won.length !== 0 && !won.includes(kakra as never) && (
+                <View style={styles.layer}></View>
+              )}
+              {won.length !== 0 &&
+                kakraNumber > 0 &&
+                liftedBowl &&
+                !won.includes(kakra as never) && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      bottom: 20,
+                      left: "50%",
+                      transform: [{ translateX: -60 / 2 }],
+                    }}
+                  >
+                    <TextStroke stroke={1.7} color={"#000000"}>
+                      <Text style={styles.textBauNumberRed}>THUA</Text>
+                    </TextStroke>
+                  </View>
+                )}
+              {won.length !== 0 &&
+                kakraNumber > 0 &&
+                liftedBowl &&
+                won.includes(kakra as never) && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      bottom: 20,
+                      left: "50%",
+                      transform: [{ translateX: -80 / 2 }],
+                    }}
+                  >
+                    <TextStroke stroke={1.7} color={"#000000"}>
+                      <Text style={styles.textBauNumberGreen}>THÁNG</Text>
+                    </TextStroke>
+                  </View>
+                )}
+              {kakraNumber > 0 && (
+                <View style={styles.textBauNumberBox}>
+                  <TextStroke stroke={1.7} color={"#000000"}>
+                    <Text
+                      style={
+                        won.includes(kakra as never)
+                          ? !liftedBowl
+                            ? styles.textBauNumberYellow
+                            : styles.textBauNumberGreen
+                          : styles.textBauNumberYellow
+                      }
+                    >
+                      {kakraNumber}
+                    </Text>
+                  </TextStroke>
+                </View>
+              )}
+            </TouchableOpacity>
           </View>
+
+          {/* Chingri */}
+
           <View style={{ position: "relative" }}>
-            <Image
-              source={chingri_flat as any}
-              style={
-                won.length === 0 || won.includes(chingri as never)
-                  ? styles.image3
-                  : [styles.image3, { opacity: 0.8 }]
-              }
-            ></Image>
-            {won.includes(chingri as never) && (
-              <Image
-                source={border as any}
-                style={[styles.image3, { position: "absolute" }]}
-              ></Image>
-            )}
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                handlePress("chingri");
+              }}
+            >
+              <Image source={chingri_flat as any} style={styles.image3}></Image>
+              {won.includes(chingri as never) && (
+                <Image
+                  source={border as any}
+                  style={[styles.image3, { position: "absolute" }]}
+                ></Image>
+              )}
+              {won.length !== 0 && !won.includes(chingri as never) && (
+                <View style={styles.layer}></View>
+              )}
+              {won.length !== 0 &&
+                chingriNumber > 0 &&
+                liftedBowl &&
+                !won.includes(chingri as never) && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      bottom: 20,
+                      left: "50%",
+                      transform: [{ translateX: -60 / 2 }],
+                    }}
+                  >
+                    <TextStroke stroke={1.7} color={"#000000"}>
+                      <Text style={styles.textBauNumberRed}>THUA</Text>
+                    </TextStroke>
+                  </View>
+                )}
+              {won.length !== 0 &&
+                chingriNumber > 0 &&
+                liftedBowl &&
+                won.includes(chingri as never) && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      bottom: 20,
+                      left: "50%",
+                      transform: [{ translateX: -80 / 2 }],
+                    }}
+                  >
+                    <TextStroke stroke={1.7} color={"#000000"}>
+                      <Text style={styles.textBauNumberGreen}>THÁNG</Text>
+                    </TextStroke>
+                  </View>
+                )}
+              {chingriNumber > 0 && (
+                <View style={styles.textBauNumberBox}>
+                  <TextStroke stroke={1.7} color={"#000000"}>
+                    <Text
+                      style={
+                        won.includes(chingri as never)
+                          ? !liftedBowl
+                            ? styles.textBauNumberYellow
+                            : styles.textBauNumberGreen
+                          : styles.textBauNumberYellow
+                      }
+                    >
+                      {chingriNumber}
+                    </Text>
+                  </TextStroke>
+                </View>
+              )}
+            </TouchableOpacity>
           </View>
+
+          {/* End*/}
         </View>
         <TouchableOpacity
           onPress={handleBowlPress}
           style={{ flex: 0, margin: "auto" }}
+          activeOpacity={1}
         >
           <Image source={liftedBowl ? btnMo : (btnXoc as any)}></Image>
         </TouchableOpacity>
@@ -316,6 +725,15 @@ export default function Play() {
 }
 
 const styles = StyleSheet.create({
+  layer: {
+    position: "absolute",
+    backgroundColor: "black",
+    borderRadius: 10,
+    opacity: 0.4,
+    width: 120,
+    height: 110,
+    marginTop: 5,
+  },
   textVersion: {
     fontSize: 20,
     textAlign: "center",
@@ -326,7 +744,24 @@ const styles = StyleSheet.create({
   textBalance: {
     fontSize: 24,
     color: "white",
+    fontWeight: "bold",
   },
+  textBauNumberYellow: {
+    fontSize: 24,
+    color: "yellow",
+    fontWeight: "bold",
+  },
+  textBauNumberGreen: {
+    fontSize: 24,
+    color: "#00ff08",
+    fontWeight: "bold",
+  },
+  textBauNumberRed: {
+    fontSize: 24,
+    color: "red",
+    fontWeight: "bold",
+  },
+  textBauNumberBox: { position: "absolute", top: 10, left: 10 },
   container4: {
     flex: 3,
     flexDirection: "row",
