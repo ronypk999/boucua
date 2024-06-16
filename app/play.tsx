@@ -246,8 +246,8 @@ export default function Play() {
       setTimeout(() => {
         setLiftBowl({
           flex: 1,
-          marginTop: -492,
-          marginLeft: -13,
+          marginTop: -462,
+          marginLeft: -2,
         });
       }, 150);
     } else {
@@ -408,7 +408,7 @@ export default function Play() {
                   <View
                     style={{
                       position: "absolute",
-                      bottom: 20,
+                      bottom: 0,
                       left: "50%",
                       transform: [{ translateX: -60 / 2 }],
                     }}
@@ -426,7 +426,7 @@ export default function Play() {
                   <View
                     style={{
                       position: "absolute",
-                      bottom: 20,
+                      bottom: 0,
                       left: "50%",
                       transform: [{ translateX: -80 / 2 }],
                     }}
@@ -483,7 +483,7 @@ export default function Play() {
                   <View
                     style={{
                       position: "absolute",
-                      bottom: 20,
+                      bottom: 0,
                       left: "50%",
                       transform: [{ translateX: -60 / 2 }],
                     }}
@@ -500,7 +500,7 @@ export default function Play() {
                   <View
                     style={{
                       position: "absolute",
-                      bottom: 20,
+                      bottom: 0,
                       left: "50%",
                       transform: [{ translateX: -80 / 2 }],
                     }}
@@ -554,7 +554,7 @@ export default function Play() {
                   <View
                     style={{
                       position: "absolute",
-                      bottom: 20,
+                      bottom: 0,
                       left: "50%",
                       transform: [{ translateX: -60 / 2 }],
                     }}
@@ -571,7 +571,7 @@ export default function Play() {
                   <View
                     style={{
                       position: "absolute",
-                      bottom: 20,
+                      bottom: 0,
                       left: "50%",
                       transform: [{ translateX: -80 / 2 }],
                     }}
@@ -600,7 +600,8 @@ export default function Play() {
               )}
             </TouchableOpacity>
           </View>
-
+        </View>
+        <View style={styles.container4}>
           {/* Mas */}
 
           <View style={{ position: "relative" }}>
@@ -627,7 +628,7 @@ export default function Play() {
                   <View
                     style={{
                       position: "absolute",
-                      bottom: 20,
+                      bottom: 0,
                       left: "50%",
                       transform: [{ translateX: -60 / 2 }],
                     }}
@@ -644,7 +645,7 @@ export default function Play() {
                   <View
                     style={{
                       position: "absolute",
-                      bottom: 20,
+                      bottom: 0,
                       left: "50%",
                       transform: [{ translateX: -80 / 2 }],
                     }}
@@ -700,7 +701,7 @@ export default function Play() {
                   <View
                     style={{
                       position: "absolute",
-                      bottom: 20,
+                      bottom: 0,
                       left: "50%",
                       transform: [{ translateX: -60 / 2 }],
                     }}
@@ -717,7 +718,7 @@ export default function Play() {
                   <View
                     style={{
                       position: "absolute",
-                      bottom: 20,
+                      bottom: 0,
                       left: "50%",
                       transform: [{ translateX: -80 / 2 }],
                     }}
@@ -773,7 +774,7 @@ export default function Play() {
                   <View
                     style={{
                       position: "absolute",
-                      bottom: 20,
+                      bottom: 0,
                       left: "50%",
                       transform: [{ translateX: -60 / 2 }],
                     }}
@@ -790,7 +791,7 @@ export default function Play() {
                   <View
                     style={{
                       position: "absolute",
-                      bottom: 20,
+                      bottom: 0,
                       left: "50%",
                       transform: [{ translateX: -80 / 2 }],
                     }}
@@ -843,8 +844,8 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     borderRadius: 10,
     opacity: 0.4,
-    width: 120,
-    height: 110,
+    width: 100,
+    height: 90,
     marginTop: 5,
   },
   textVersion: {
@@ -876,10 +877,11 @@ const styles = StyleSheet.create({
   },
   textBauNumberBox: { position: "absolute", top: 10, left: 10 },
   container4: {
-    flex: 3,
+    flex: 1,
     flexDirection: "row",
     width: "100%",
-    flexWrap: "wrap",
+    marginBottom: 20,
+    marginTop: 10,
     justifyContent: "center",
     gap: 10,
   },
@@ -889,10 +891,10 @@ const styles = StyleSheet.create({
   disk: {
     position: "relative",
     flex: 5,
+    marginTop: 20,
   },
   absolute: {
     position: "absolute",
-    flex: 1,
     top: 130,
     left: "50%",
     transform: [{ translateX: -300 / 2 }],
@@ -904,10 +906,9 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   imageBowl: {
-    width: "103%",
+    width: "90%",
     resizeMode: "contain",
     margin: "auto",
-    flex: 1,
   },
   container3: {
     marginTop: -30,
@@ -926,21 +927,21 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
   },
   image: {
-    width: 150,
-    height: 150,
-    resizeMode: "contain",
-    margin: "auto",
-  },
-  image3: {
     width: 120,
     height: 120,
     resizeMode: "contain",
     margin: "auto",
   },
-  image2: {
-    width: "90%",
+  image3: {
+    width: 100,
+    height: 100,
     resizeMode: "contain",
     margin: "auto",
-    flex: 1,
+    marginBottom: -16,
+  },
+  image2: {
+    width: "80%",
+    resizeMode: "contain",
+    margin: "auto",
   },
 });

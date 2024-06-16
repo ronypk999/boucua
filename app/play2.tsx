@@ -182,8 +182,8 @@ export default function Play2() {
       setTimeout(() => {
         setLiftBowl({
           flex: 1,
-          marginTop: -492,
-          marginLeft: -13,
+          marginTop: -462,
+          marginLeft: -2,
         });
       }, 150);
     } else {
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   imageBowl: {
-    width: "103%",
+    width: "98%",
     resizeMode: "contain",
     margin: "auto",
     flex: 1,
@@ -374,14 +374,14 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
   },
   image: {
-    width: 150,
-    height: 150,
+    width: 120,
+    height: 120,
     resizeMode: "contain",
     margin: "auto",
   },
   image3: {
-    width: 120,
-    height: 120,
+    width: 100,
+    height: 100,
     resizeMode: "contain",
     margin: "auto",
   },
