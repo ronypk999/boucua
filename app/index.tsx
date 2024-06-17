@@ -1,6 +1,7 @@
 import {
   Image,
   ImageBackground,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -23,6 +24,7 @@ export default function Index() {
   };
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor={'#000'} />
       <ImageBackground source={back_1 as any} style={styles.backgroundImage}>
         <Image source={back_2 as any} style={styles.image} />
         <View style={styles.container}>

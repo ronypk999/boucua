@@ -1,6 +1,7 @@
 import {
   Image,
   ImageBackground,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -244,6 +245,7 @@ export default function Play2() {
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor={'#000'} />
       <ImageBackground source={back as any} style={styles.backgroundImage}>
         <View style={styles.container4}>
           <View style={{ position: "relative" }}>

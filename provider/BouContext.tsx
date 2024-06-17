@@ -2,6 +2,7 @@ import React, { createContext, ReactNode, useEffect, useState } from "react";
 import { Audio } from "expo-av";
 import win from "../assets/win.mp3";
 import shake from "../assets/shake.mp3";
+import { StatusBar } from "react-native";
 
 type BouContextType = {
   sound: Audio.Sound | null;
@@ -42,8 +43,9 @@ const BouProvider = ({ children }: BouProviderProps) => {
     winSound,
   };
 
-  return (
+  return (<><StatusBar backgroundColor={'#000'} />
     <BouContext.Provider value={contextValues}>{children}</BouContext.Provider>
+    </>
   );
 };
 
