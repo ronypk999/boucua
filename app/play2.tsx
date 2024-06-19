@@ -1,6 +1,8 @@
 import {
+  Dimensions,
   Image,
   ImageBackground,
+  SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
@@ -32,6 +34,8 @@ import { TextStroke } from "@/components/TextStroke";
 import { useNavigation } from "expo-router";
 import { useContext, useEffect, useState } from "react";
 import { Audio } from "expo-av";
+
+import * as Animatable from 'react-native-animatable';
 
 import Song from "@/components/Song";
 import { BouContext } from "@/provider/BouContext";
@@ -150,80 +154,37 @@ export default function Play2() {
       return 0;
     }
   };
+
+  const fadeIn = {
+    from: {
+     
+      marginTop:-1900
+    },
+    to: {
+     
+      marginTop:-470
+    },
+  };
+  const fadeout = {
+    from: {
+     
+      marginTop:-470
+    },
+    to: {
+    
+      marginTop:-1900
+    },
+  };
   const handleBowlPress = async () => {
     if (liftedBowl) {
       await shakeSound?.stopAsync();
       await shakeSound?.playAsync();
-      setLiftBowl({
-        flex: 1,
-        marginTop: -1592,
-        marginLeft: -13,
-      });
-      setTimeout(() => {
-        setLiftBowl({
-          flex: 1,
-          marginTop: -1092,
-          marginLeft: -13,
-        });
-      }, 40);
-      setTimeout(() => {
-        setLiftBowl({
-          flex: 1,
-          marginTop: -692,
-          marginLeft: -13,
-        });
-      }, 80);
-      setTimeout(() => {
-        setLiftBowl({
-          flex: 1,
-          marginTop: -592,
-          marginLeft: -13,
-        });
-      }, 120);
-      setTimeout(() => {
-        setLiftBowl({
-          flex: 1,
-          marginTop: -462,
-          marginLeft: -2,
-        });
-      }, 150);
+      
     } else {
       updateBouWin();
       await winSound?.stopAsync();
       await winSound?.playAsync();
-      setLiftBowl({
-        flex: 1,
-        marginTop: -492,
-        marginLeft: -13,
-      });
-      setTimeout(() => {
-        setLiftBowl({
-          flex: 1,
-          marginTop: -692,
-          marginLeft: -13,
-        });
-      }, 40);
-      setTimeout(() => {
-        setLiftBowl({
-          flex: 1,
-          marginTop: -892,
-          marginLeft: -13,
-        });
-      }, 80);
-      setTimeout(() => {
-        setLiftBowl({
-          flex: 1,
-          marginTop: -1092,
-          marginLeft: -13,
-        });
-      }, 120);
-      setTimeout(() => {
-        setLiftBowl({
-          flex: 1,
-          marginTop: -2092,
-          marginLeft: -13,
-        });
-      }, 150);
+      
     }
 
     setLiftedBowl(!liftedBowl);
@@ -244,18 +205,18 @@ export default function Play2() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={'#000'} />
       <ImageBackground source={back as any} style={styles.backgroundImage}>
         <View style={styles.container4}>
-          <View style={{ position: "relative" }}>
+          <View style={styles.imageHolder}>
             <Image source={bouWinFlat[0] as any} style={styles.image3}></Image>
           </View>
 
-          <View style={{ position: "relative" }}>
+          <View style={styles.imageHolder}>
             <Image source={bouWinFlat[1] as any} style={styles.image3}></Image>
           </View>
-          <View style={{ position: "relative" }}>
+          <View style={styles.imageHolder}>
             <Image source={bouWinFlat[2] as any} style={styles.image3}></Image>
           </View>
         </View>
@@ -270,9 +231,18 @@ export default function Play2() {
                 <Image source={bouWin[2] as any} style={styles.image}></Image>
               </View>
             </View>
-            <View style={liftBowl}>
+            {!liftedBowl&&<Animatable.View
+              
+              animation={fadeIn}
+              duration={200} style={{flex:1,marginLeft:-20}}>
               <Image source={bowl as any} style={styles.imageBowl}></Image>
-            </View>
+            </Animatable.View>}
+            {liftedBowl&&<Animatable.View
+             
+              animation={fadeout}
+              duration={200} style={{flex:1,marginLeft:-20}}>
+              <Image source={bowl as any} style={styles.imageBowl}></Image>
+            </Animatable.View>}
           </View>
 
           <TouchableOpacity
@@ -300,19 +270,19 @@ export default function Play2() {
           <Text style={styles.textVersion}>Vs: {versionGen}</Text>
         </View>
       </ImageBackground>
-    </View>
+    </SafeAreaView>
   );
 }
-
+const {height,width} = Dimensions.get('screen')
 const styles = StyleSheet.create({
   layer: {
     position: "absolute",
     backgroundColor: "black",
     borderRadius: 10,
     opacity: 0.4,
-    width: 120,
-    height: 110,
-    marginTop: 5,
+    top:0,
+    width: '100%',
+    height: '100%',
   },
   textVersion: {
     fontSize: 20,
@@ -326,12 +296,14 @@ const styles = StyleSheet.create({
     color: "white",
   },
   container4: {
-    flex: 3,
+    display:'flex',
     flexDirection: "row",
     width: "100%",
     flexWrap: "wrap",
-    justifyContent: "center",
-    gap: 10,
+    justifyContent: "space-between",
+    alignItems:'center',
+    
+    marginTop:height*0.13
   },
   container: {
     flex: 1,
@@ -354,10 +326,9 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   imageBowl: {
-    width: "98%",
+    width: width*0.83,
     resizeMode: "contain",
     margin: "auto",
-    flex: 1,
   },
   container3: {
     marginTop: -30,
@@ -376,21 +347,27 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
   },
   image: {
-    width: 120,
-    height: 120,
+    width: width*0.34,
+    height: height*0.17,
     resizeMode: "contain",
     margin: "auto",
   },
   image3: {
-    width: 100,
-    height: 100,
-    resizeMode: "contain",
-    margin: "auto",
+    resizeMode: "stretch",
+    width:'100%',
+    height: '100%',
+    borderWidth:0
   },
   image2: {
-    width: "90%",
+    width: height*0.42,
     resizeMode: "contain",
     margin: "auto",
-    flex: 1,
   },
+  imageHolder:{
+    overflow:'hidden',
+    width:width*0.31, 
+    borderRadius:10,
+    height:height*0.13,
+    
+  }
 });
