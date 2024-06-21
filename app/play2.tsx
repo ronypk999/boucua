@@ -206,7 +206,7 @@ export default function Play2() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor={'#000'} />
+      <StatusBar backgroundColor={'#000'} barStyle={"dark-content"} />
       <ImageBackground source={back as any} style={styles.backgroundImage}>
         <View style={styles.container4}>
           <View style={styles.imageHolder}>
@@ -270,6 +270,7 @@ export default function Play2() {
           <Text style={styles.textVersion}>Vs: {versionGen}</Text>
         </View>
       </ImageBackground>
+      <Image style={{height:'20%', width:'60%', resizeMode:'contain',position:'absolute',bottom:0,left:-50, zIndex:1}} source={require("../assets/images/gifmaker_me-ezgif.com-crop.gif")}></Image>
     </SafeAreaView>
   );
 }

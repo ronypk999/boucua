@@ -221,13 +221,13 @@ export default function Play() {
     },
     to: {
      
-      marginTop:-450
+      marginTop:-506
     },
   };
   const fadeout = {
     from: {
      
-      marginTop:-450
+      marginTop:-506
     },
     to: {
     
@@ -306,7 +306,7 @@ export default function Play() {
   }, []);
   return (
     <View style={styles.container}>
-       <StatusBar backgroundColor={'#000'} />
+       <StatusBar backgroundColor={'#000'} barStyle={"dark-content"} />
       <ImageBackground source={back as any} style={styles.backgroundImage}>
         <View style={styles.disk}>
           <Image source={disk as any} style={styles.image2}></Image>
@@ -322,13 +322,13 @@ export default function Play() {
             {!liftedBowl&&<Animatable.View
               
               animation={fadeIn}
-              duration={100} style={{flex:1,marginTop:-465,marginLeft:-8}}>
+              duration={100} style={{flex:1,marginTop:-506,marginLeft:-10}}>
               <Image source={bowl as any} style={styles.imageBowl}></Image>
             </Animatable.View>}
             {liftedBowl&&<Animatable.View
              
               animation={fadeout}
-              duration={100} style={{flex:1,marginTop:-465,marginLeft:-8}}>
+              duration={100} style={{flex:1,marginTop:-506,marginLeft:-10}}>
               <Image source={bowl as any} style={styles.imageBowl}></Image>
             </Animatable.View>}
           </View>
@@ -820,13 +820,15 @@ export default function Play() {
           style={{ flex: 0, margin: "auto" }}
           activeOpacity={1}
         >
-          <Image style={{height:50, width:150, resizeMode:'contain'}} source={liftedBowl ? btnMo : (btnXoc as any)}></Image>
+          <Image style={{height:70, width:165, resizeMode:'contain'}} source={liftedBowl ? btnMo : (btnXoc as any)}></Image>
+          
         </TouchableOpacity>
-             
+        
         <View style={{ flex: 0 }}>
           <Text style={styles.textVersion}>Vs: {versionGen}</Text>
         </View>
       </ImageBackground>
+      <Image style={{height:'20%', width:'60%', resizeMode:'contain',position:'absolute',bottom:0,left:-50, zIndex:1}} source={require("../assets/images/gifmaker_me-ezgif.com-crop.gif")}></Image>
     </View>
   );
 }
@@ -899,7 +901,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   imageBowl: {
-    width: width*0.83,
+    width: width*0.89,
     resizeMode: "contain",
     margin: "auto",
   },
@@ -921,7 +923,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: width*0.4,
-    height: height*0.13,
+    height: height*0.16,
     resizeMode: "contain",
     margin: "auto",
   },
