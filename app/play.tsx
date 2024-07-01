@@ -29,8 +29,9 @@ import btnBack from "../assets/images/back_btn.png";
 import bgCash from "../assets/images/bg_cash.png";
 import bowl from "../assets/images/bowl.png";
 import border from "../assets/images/border.png";
-import * as Animatable from 'react-native-animatable';
-
+import thorStand from "../assets/images/thor_05-stand.gif";
+import thorSkill from "../assets/images/thor_05-skill.gif";
+import * as Animatable from "react-native-animatable";
 
 import { TextStroke } from "@/components/TextStroke";
 import { useNavigation } from "expo-router";
@@ -41,68 +42,14 @@ import Song from "@/components/Song";
 import { BouContext } from "@/provider/BouContext";
 import { opacity } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 import { useNetInfo } from "@react-native-community/netinfo";
-
-const alphabet = [
-  "a",
-  "b",
-  "c",
-  "d",
-  "e",
-  "f",
-  "g",
-  "h",
-  "i",
-  "j",
-  "k",
-  "l",
-  "m",
-  "n",
-  "o",
-  "p",
-  "q",
-  "r",
-  "s",
-  "t",
-  "u",
-  "v",
-  "w",
-  "x",
-  "y",
-  "z",
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-  "I",
-  "J",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "U",
-  "V",
-  "W",
-  "X",
-  "Y",
-  "Z",
-];
+const alphabet = ["K", "C"];
 
 const bouImages = [bau, kakra, murgi, mas, horin, chingri];
 
 export default function Play() {
   const [liftBowl, setLiftBowl] = useState({
     flex: 1,
-    marginTop: -892,
+    marginTop: -1092,
     marginLeft: -13,
   });
   const [liftedBowl, setLiftedBowl] = useState(true);
@@ -124,6 +71,7 @@ export default function Play() {
   const [kakraNumber, setKakraNumber] = useState(0);
   const [chingriNumber, setChingriNumber] = useState(0);
   const [murgiNumber, setMurgiNumber] = useState(0);
+  const [thor, setThor] = useState(thorStand);
 
   const { sound, setSound, shakeSound, winSound } = useContext(BouContext)!;
   const updateBouWin = () => {
@@ -211,27 +159,23 @@ export default function Play() {
         .catch((e) => {});
     }
   };
- 
+
   const popupRef = useRef(null);
 
   const fadeIn = {
     from: {
-     
-      marginTop:-900
+      marginTop: -1092,
     },
     to: {
-     
-      marginTop:-506
+      marginTop: -506,
     },
   };
   const fadeout = {
     from: {
-     
-      marginTop:-506
+      marginTop: -506,
     },
     to: {
-    
-      marginTop:-900
+      marginTop: -1092,
     },
   };
 
@@ -250,12 +194,10 @@ export default function Play() {
       setHorinNumber(0);
       await shakeSound?.stopAsync();
       await shakeSound?.playAsync();
-      
     } else {
       updateBouWin();
       await winSound?.stopAsync();
       await winSound?.playAsync();
-      
     }
 
     setLiftedBowl(!liftedBowl);
@@ -291,22 +233,30 @@ export default function Play() {
 
   useEffect(() => {
     setVersionGen(
-      `${random9(9)}${random9(9)}.${random9(9)}${random9(9)}.${random9(
-        9
-      )}${random9(9)}.${random9(9)}${random9(9)}${
+      `${random9(9)}.${random9(9)}.${random9(9)}${random9(9)}.${
         alphabet[random9(alphabet.length - 1)]
       }`
     );
   }, []);
-  const {height,width} = Dimensions.get('screen')
+  const { height, width } = Dimensions.get("screen");
   useEffect(() => {
-    
-    console.log(height,width);
-    
+    const timer = () => {
+      const time = setTimeout(() => {
+        clearTimeout(time);
+        setThor(thorSkill);
+        const time2 = setTimeout(() => {
+          clearTimeout(time2);
+          setThor(thorStand);
+          timer();
+        }, 3200);
+      }, 10000);
+    };
+
+    timer();
   }, []);
+
   return (
     <View style={styles.container}>
-       <StatusBar backgroundColor={'#000'} barStyle={"dark-content"} />
       <ImageBackground source={back as any} style={styles.backgroundImage}>
         <View style={styles.disk}>
           <Image source={disk as any} style={styles.image2}></Image>
@@ -319,21 +269,29 @@ export default function Play() {
                 <Image source={bouWin[2] as any} style={styles.image}></Image>
               </View>
             </View>
-            {!liftedBowl&&<Animatable.View
-              
-              animation={fadeIn}
-              duration={100} style={{flex:1,marginTop:-506,marginLeft:-10}}>
-              <Image source={bowl as any} style={styles.imageBowl}></Image>
-            </Animatable.View>}
-            {liftedBowl&&<Animatable.View
-             
-              animation={fadeout}
-              duration={100} style={{flex:1,marginTop:-506,marginLeft:-10}}>
-              <Image source={bowl as any} style={styles.imageBowl}></Image>
-            </Animatable.View>}
+            {!liftedBowl && (
+              <Animatable.View
+                animation={fadeIn}
+                duration={100}
+                style={{ flex: 1, marginTop: -506, marginLeft: -10 }}
+              >
+                <Image source={bowl as any} style={styles.imageBowl}></Image>
+              </Animatable.View>
+            )}
+            {liftedBowl && (
+              <Animatable.View
+                animation={fadeout}
+                duration={100}
+                style={{ flex: 1, marginTop: -506, marginLeft: -10 }}
+              >
+                <Image source={bowl as any} style={styles.imageBowl}></Image>
+              </Animatable.View>
+            )}
           </View>
 
-          <TouchableOpacity style={{ flex: 0, position: "absolute", top: 30,left:8 }}>
+          <TouchableOpacity
+            style={{ flex: 0, position: "absolute", top: 0, left: 0 }}
+          >
             <ImageBackground
               source={bgCash as any}
               style={{ width: 117, height: 45 }}
@@ -341,7 +299,6 @@ export default function Play() {
               <View
                 style={{
                   margin: "auto",
-                  
                 }}
               >
                 <TextStroke stroke={1.7} color={"#000000"}>
@@ -353,8 +310,7 @@ export default function Play() {
             </ImageBackground>
           </TouchableOpacity>
 
-
-          <View style={{ flex: 0, position: "absolute", right: 3, top: 30 }}>
+          <View style={{ flex: 0, position: "absolute", right: 0, top: 0 }}>
             <Song sound={sound} setSound={setSound}></Song>
           </View>
           <TouchableOpacity
@@ -368,7 +324,7 @@ export default function Play() {
           </TouchableOpacity>
         </View>
 
-        <View style={[styles.container4,styles.container4_1]}>
+        <View style={[styles.container4, styles.container4_1]}>
           {/* Horin */}
           <View style={styles.containerRow}>
             <TouchableOpacity
@@ -815,33 +771,64 @@ export default function Play() {
 
           {/* End*/}
         </View>
-        <TouchableOpacity
-          onPress={handleBowlPress}
-          style={{ flex: 0, margin: "auto" }}
-          activeOpacity={1}
-        >
-          <Image style={{height:70, width:165, resizeMode:'contain'}} source={liftedBowl ? btnMo : (btnXoc as any)}></Image>
-          
-        </TouchableOpacity>
-        
-        <View style={{ flex: 0 }}>
-          <Text style={styles.textVersion}>Vs: {versionGen}</Text>
+        <View style={{ overflow: "hidden", position: "relative", flex: 1 }}>
+          <TouchableOpacity
+            onPress={handleBowlPress}
+            style={{
+              margin: "auto",
+              position: "absolute",
+              bottom: 35,
+              left: width / 2 - 80,
+              zIndex: 2,
+            }}
+            activeOpacity={1}
+          >
+            <Image
+              style={{
+                height: 70,
+                width: 165,
+                resizeMode: "contain",
+              }}
+              source={liftedBowl ? btnMo : (btnXoc as any)}
+            ></Image>
+          </TouchableOpacity>
+          <Image
+            style={{
+              height: "800%",
+              width: "800%",
+              resizeMode: "contain",
+              position: "absolute",
+              bottom: -height / 3.1,
+              left: -width * 3.7,
+              zIndex: 0,
+            }}
+            source={thor as any}
+          ></Image>
+          <View
+            style={{
+              flex: 0,
+              position: "absolute",
+              bottom: 0,
+              left: width / 2 - 50,
+            }}
+          >
+            <Text style={styles.textVersion}>Vs: {versionGen}</Text>
+          </View>
         </View>
       </ImageBackground>
-      <Image style={{height:'20%', width:'60%', resizeMode:'contain',position:'absolute',bottom:0,left:-50, zIndex:1}} source={require("../assets/images/gifmaker_me-ezgif.com-crop.gif")}></Image>
     </View>
   );
 }
-const {height,width} = Dimensions.get('screen')
+const { height, width } = Dimensions.get("screen");
 const styles = StyleSheet.create({
   layer: {
     position: "absolute",
     backgroundColor: "black",
     borderRadius: 10,
     opacity: 0.4,
-    top:0,
-    width: '100%',
-    height: '100%',
+    top: 0,
+    width: "100%",
+    height: "100%",
   },
   textVersion: {
     fontSize: 20,
@@ -851,7 +838,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   textBalance: {
-    fontSize: 24,
+    fontSize: 20,
     color: "white",
     fontWeight: "bold",
   },
@@ -875,9 +862,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     width: "100%",
-    
+
     justifyContent: "space-between",
-    
   },
   container: {
     flex: 1,
@@ -886,11 +872,10 @@ const styles = StyleSheet.create({
     position: "relative",
     flex: 3.5,
     marginTop: 2,
-    
   },
   absolute: {
     position: "absolute",
-    top: height*0.18,
+    top: height * 0.18,
     left: "50%",
     transform: [{ translateX: -350 / 2 }],
   },
@@ -901,7 +886,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   imageBowl: {
-    width: width*0.89,
+    width: width * 0.89,
     resizeMode: "contain",
     margin: "auto",
   },
@@ -922,43 +907,41 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
   },
   image: {
-    width: width*0.4,
-    height: height*0.16,
+    width: width * 0.4,
+    height: height * 0.16,
     resizeMode: "contain",
     margin: "auto",
   },
   image3: {
     resizeMode: "stretch",
-    width:'100%',
-    height: '100%',
-   
-    borderWidth:0
+    width: "100%",
+    height: "100%",
+
+    borderWidth: 0,
   },
-  imageLayer:{
-    position:'absolute',
-    top:0,
-    width:'100%',
-    height: '100%',
-    resizeMode:'cover'
+  imageLayer: {
+    position: "absolute",
+    top: 0,
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   image2: {
-    width: height*0.42,
+    width: height * 0.42,
     resizeMode: "contain",
     margin: "auto",
-    
   },
-  containerRow:{
-    position:'relative',
-    width:width*0.32,
-    height:'85%',
+  containerRow: {
+    position: "relative",
+    width: width * 0.32,
+    height: "85%",
   },
-  imageHolder:{
-    overflow:'hidden',
-    width:'100%', 
-    borderRadius:10
+  imageHolder: {
+    overflow: "hidden",
+    width: "100%",
+    borderRadius: 10,
   },
-  container4_1:{
-    marginTop:10
-  }
-
+  container4_1: {
+    marginTop: 10,
+  },
 });

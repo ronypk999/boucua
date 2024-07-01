@@ -29,71 +29,20 @@ import btnBack from "../assets/images/back_btn.png";
 import bgCash from "../assets/images/bg_cash.png";
 import bowl from "../assets/images/bowl.png";
 import border from "../assets/images/border.png";
+import thorStand from "../assets/images/thor_05-stand.gif";
+import thorSkill from "../assets/images/thor_05-skill.gif";
 
 import { TextStroke } from "@/components/TextStroke";
 import { useNavigation } from "expo-router";
 import { useContext, useEffect, useState } from "react";
 import { Audio } from "expo-av";
 
-import * as Animatable from 'react-native-animatable';
+import * as Animatable from "react-native-animatable";
 
 import Song from "@/components/Song";
 import { BouContext } from "@/provider/BouContext";
 import { opacity } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
-const alphabet = [
-  "a",
-  "b",
-  "c",
-  "d",
-  "e",
-  "f",
-  "g",
-  "h",
-  "i",
-  "j",
-  "k",
-  "l",
-  "m",
-  "n",
-  "o",
-  "p",
-  "q",
-  "r",
-  "s",
-  "t",
-  "u",
-  "v",
-  "w",
-  "x",
-  "y",
-  "z",
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-  "I",
-  "J",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "U",
-  "V",
-  "W",
-  "X",
-  "Y",
-  "Z",
-];
+const alphabet = ["K", "C"];
 
 const bouImages = [bau, kakra, murgi, mas, horin, chingri];
 const bouImagesFlat = [
@@ -113,7 +62,7 @@ export default function Play2() {
   });
   const [liftedBowl, setLiftedBowl] = useState(true);
   const [versionGen, setVersionGen] = useState("23.354.56");
-
+  const [thor, setThor] = useState(thorStand);
   const nav = useNavigation();
 
   const goToHomeScreen = () => {
@@ -157,34 +106,28 @@ export default function Play2() {
 
   const fadeIn = {
     from: {
-     
-      marginTop:-1900
+      marginTop: -1900,
     },
     to: {
-     
-      marginTop:-470
+      marginTop: -470,
     },
   };
   const fadeout = {
     from: {
-     
-      marginTop:-470
+      marginTop: -470,
     },
     to: {
-    
-      marginTop:-1900
+      marginTop: -1900,
     },
   };
   const handleBowlPress = async () => {
     if (liftedBowl) {
       await shakeSound?.stopAsync();
       await shakeSound?.playAsync();
-      
     } else {
       updateBouWin();
       await winSound?.stopAsync();
       await winSound?.playAsync();
-      
     }
 
     setLiftedBowl(!liftedBowl);
@@ -196,17 +139,30 @@ export default function Play2() {
 
   useEffect(() => {
     setVersionGen(
-      `${random9(9)}${random9(9)}.${random9(9)}${random9(9)}.${random9(
-        9
-      )}${random9(9)}.${random9(9)}${random9(9)}${
+      `${random9(9)}.${random9(9)}.${random9(9)}${random9(9)}.${
         alphabet[random9(alphabet.length - 1)]
       }`
     );
   }, []);
 
+  useEffect(() => {
+    const timer = () => {
+      const time = setTimeout(() => {
+        clearTimeout(time);
+        setThor(thorSkill);
+        const time2 = setTimeout(() => {
+          clearTimeout(time2);
+          setThor(thorStand);
+          timer();
+        }, 3200);
+      }, 10000);
+    };
+
+    timer();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor={'#000'} barStyle={"dark-content"} />
       <ImageBackground source={back as any} style={styles.backgroundImage}>
         <View style={styles.container4}>
           <View style={styles.imageHolder}>
@@ -231,18 +187,24 @@ export default function Play2() {
                 <Image source={bouWin[2] as any} style={styles.image}></Image>
               </View>
             </View>
-            {!liftedBowl&&<Animatable.View
-              
-              animation={fadeIn}
-              duration={200} style={{flex:1,marginLeft:-20}}>
-              <Image source={bowl as any} style={styles.imageBowl}></Image>
-            </Animatable.View>}
-            {liftedBowl&&<Animatable.View
-             
-              animation={fadeout}
-              duration={200} style={{flex:1,marginLeft:-20}}>
-              <Image source={bowl as any} style={styles.imageBowl}></Image>
-            </Animatable.View>}
+            {!liftedBowl && (
+              <Animatable.View
+                animation={fadeIn}
+                duration={200}
+                style={{ flex: 1, marginLeft: -20 }}
+              >
+                <Image source={bowl as any} style={styles.imageBowl}></Image>
+              </Animatable.View>
+            )}
+            {liftedBowl && (
+              <Animatable.View
+                animation={fadeout}
+                duration={200}
+                style={{ flex: 1, marginLeft: -20 }}
+              >
+                <Image source={bowl as any} style={styles.imageBowl}></Image>
+              </Animatable.View>
+            )}
           </View>
 
           <TouchableOpacity
@@ -259,31 +221,64 @@ export default function Play2() {
           </View>
         </View>
 
-        <TouchableOpacity
-          onPress={handleBowlPress}
-          style={{ flex: 0, margin: "auto" }}
-          activeOpacity={1}
-        >
-          <Image source={liftedBowl ? btnMo : (btnXoc as any)}></Image>
-        </TouchableOpacity>
-        <View style={{ flex: 0 }}>
-          <Text style={styles.textVersion}>Vs: {versionGen}</Text>
+        <View style={{ overflow: "hidden", position: "relative", flex: 1 }}>
+          <TouchableOpacity
+            onPress={handleBowlPress}
+            style={{
+              margin: "auto",
+              position: "absolute",
+              bottom: 35,
+              left: width / 2 - 80,
+              zIndex: 2,
+            }}
+            activeOpacity={1}
+          >
+            <Image
+              style={{
+                height: 70,
+                width: 165,
+                resizeMode: "contain",
+              }}
+              source={liftedBowl ? btnMo : (btnXoc as any)}
+            ></Image>
+          </TouchableOpacity>
+          <Image
+            style={{
+              height: "1000%",
+              width: "1000%",
+              resizeMode: "contain",
+              position: "absolute",
+              bottom: -height / 3.1,
+              left: -width * 4.67,
+              zIndex: 0,
+            }}
+            source={thor as any}
+          ></Image>
+          <View
+            style={{
+              flex: 0,
+              position: "absolute",
+              bottom: 0,
+              left: width / 2 - 50,
+            }}
+          >
+            <Text style={styles.textVersion}>Vs: {versionGen}</Text>
+          </View>
         </View>
       </ImageBackground>
-      <Image style={{height:'20%', width:'60%', resizeMode:'contain',position:'absolute',bottom:0,left:-50, zIndex:1}} source={require("../assets/images/gifmaker_me-ezgif.com-crop.gif")}></Image>
     </SafeAreaView>
   );
 }
-const {height,width} = Dimensions.get('screen')
+const { height, width } = Dimensions.get("screen");
 const styles = StyleSheet.create({
   layer: {
     position: "absolute",
     backgroundColor: "black",
     borderRadius: 10,
     opacity: 0.4,
-    top:0,
-    width: '100%',
-    height: '100%',
+    top: 0,
+    width: "100%",
+    height: "100%",
   },
   textVersion: {
     fontSize: 20,
@@ -297,14 +292,14 @@ const styles = StyleSheet.create({
     color: "white",
   },
   container4: {
-    display:'flex',
+    display: "flex",
     flexDirection: "row",
     width: "100%",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    alignItems:'center',
-    
-    marginTop:height*0.13
+    alignItems: "center",
+
+    marginTop: height * 0.13,
   },
   container: {
     flex: 1,
@@ -327,7 +322,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   imageBowl: {
-    width: width*0.83,
+    width: width * 0.83,
     resizeMode: "contain",
     margin: "auto",
   },
@@ -348,27 +343,26 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
   },
   image: {
-    width: width*0.34,
-    height: height*0.17,
+    width: width * 0.34,
+    height: height * 0.17,
     resizeMode: "contain",
     margin: "auto",
   },
   image3: {
     resizeMode: "stretch",
-    width:'100%',
-    height: '100%',
-    borderWidth:0
+    width: "100%",
+    height: "100%",
+    borderWidth: 0,
   },
   image2: {
-    width: height*0.42,
+    width: height * 0.42,
     resizeMode: "contain",
     margin: "auto",
   },
-  imageHolder:{
-    overflow:'hidden',
-    width:width*0.31, 
-    borderRadius:10,
-    height:height*0.13,
-    
-  }
+  imageHolder: {
+    overflow: "hidden",
+    width: width * 0.31,
+    borderRadius: 10,
+    height: height * 0.13,
+  },
 });
